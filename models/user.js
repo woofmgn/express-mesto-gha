@@ -2,20 +2,20 @@ const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
   name: {
-    require: true,
     type: String,
+    require: true,
     minlength: 2,
     maxlength: 30,
   },
   about: {
-    require: true,
     type: String,
+    require: true,
     minlength: 2,
     maxlength: 30,
   },
   avatar: {
-    require: true,
     type: String,
+    require: true,
   },
 });
 
