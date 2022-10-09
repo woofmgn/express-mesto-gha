@@ -20,3 +20,15 @@ module.exports.deleteCard = (req, res) => {
     .then((card) => res.send({ message: `Карточка ${card} удалена` }))
     .catch((err) => res.send({ message: `Ошибка ${err.message}` }));
 };
+
+module.exports.likeCard = (req, res) => {
+  Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
+    .then((card) => res.send(card))
+    .catch((err) => res.send({ message: `Ошибка ${err.message}` }));
+};
+
+module.exports.dislikeCard = (req, res) => {
+  Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
+    .then((card) => res.send(card))
+    .catch((err) => res.send({ message: `Ошибка ${err.message}` }));
+};
