@@ -30,7 +30,7 @@ module.exports.deleteCard = (req, res) => {
   Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
-        res.status(ERROR_CODE_DATA_NOT_FOUND).send('Карточка с указанным _id не найдена');
+        res.status(ERROR_CODE_DATA_NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена' });
         return;
       }
       Card.findByIdAndRemove(req.params.cardId)
@@ -40,6 +40,10 @@ module.exports.deleteCard = (req, res) => {
         });
     })
     .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(ERROR_CODE_INCORRECT_DATA).send({ message: `Переданы некорректные данные для удаления карточки, произошла ошибка: ${err.message}` });
+        return;
+      }
       res.status(ERROR_CODE_DEFAULT).send({ message: `Ошибка ${err.message}` });
     });
 };
