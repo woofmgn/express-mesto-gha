@@ -1,5 +1,11 @@
 const Card = require('../models/card');
 
+const {
+  ERROR_CODE_INCORRECT_DATA,
+  ERROR_CODE_DATA_NOT_FOUND,
+  ERROR_CODE_DEFAULT,
+} = require('../utills/utills');
+
 module.exports.getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send(cards))
@@ -9,7 +15,6 @@ module.exports.getCards = (req, res) => {
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
 
-  console.log(req.user._id);
   Card.create({ name, link })
     .then((cards) => res.send(cards))
     .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err.message}` }));
