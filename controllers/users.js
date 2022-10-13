@@ -18,11 +18,11 @@ module.exports.getUser = (req, res) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'NotFound') {
-        res.status(ERROR_CODE_DATA_NOT_FOUND).send({ message: `Запрашиваемый пользователь не найден, произошла ошибка: ${err.message}` });
+        res.status(ERROR_CODE_DATA_NOT_FOUND).send({ message: `Пользователь с указанным _id не найден, произошла ошибка: ${err.message}` });
         return;
       }
       if (err.name === 'CastError') {
-        res.status(ERROR_CODE_INCORRECT_DATA).send({ message: `Введен не верный id пользователя, произошла ошибка: ${err.message}` });
+        res.status(ERROR_CODE_INCORRECT_DATA).send({ message: `Передан не верный id пользователя, произошла ошибка: ${err.message}` });
         return;
       }
       res.status(ERROR_CODE_DEFAULT).send({ message: `Произошла ошибка: ${err.message}` });
@@ -36,7 +36,7 @@ module.exports.createUser = (req, res) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_CODE_INCORRECT_DATA).send({ message: `Введены не корректные данные, произошла ошибка: ${err.message}` });
+        res.status(ERROR_CODE_INCORRECT_DATA).send({ message: `Переданы некорректные данные при создании пользователя, произошла ошибка: ${err.message}` });
         return;
       }
       res.status(500).send({ message: err.message });
@@ -49,11 +49,11 @@ module.exports.editUser = (req, res) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'NotFound') {
-        res.status(ERROR_CODE_DATA_NOT_FOUND).send({ message: `Запрашиваемый пользователь не найден, произошла ошибка: ${err.message}` });
+        res.status(ERROR_CODE_DATA_NOT_FOUND).send({ message: `Пользователь с указанным _id не найден, произошла ошибка: ${err.message}` });
         return;
       }
       if (err.name === 'CastError') {
-        res.status(ERROR_CODE_INCORRECT_DATA).send({ message: `Введены не корректные данные, произошла ошибка: ${err.message}` });
+        res.status(ERROR_CODE_INCORRECT_DATA).send({ message: `Переданы некорректные данные при обновлении профиля, произошла ошибка: ${err.message}` });
         return;
       }
       res.send(`Произошла ошибка: ${err.message}`);
