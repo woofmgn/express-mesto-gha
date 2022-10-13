@@ -2,17 +2,17 @@ const mongoose = require('mongoose');
 
 const cardSchema = mongoose.Schema({
   name: {
-    require: true,
+    required: true,
     type: String,
     minlength: 2,
     maxlength: 30,
   },
   link: {
-    require: true,
+    required: true,
     type: String,
   },
   owner: {
-    require: true,
+    required: true,
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
   },
