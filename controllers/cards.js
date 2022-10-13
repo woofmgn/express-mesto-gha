@@ -45,35 +45,46 @@ module.exports.deleteCard = (req, res) => {
 };
 
 module.exports.likeCard = (req, res) => {
-  Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
-    .orFail(new Error('NotFound'))
-    .then((card) => res.send(card))
+  Card.findById(req.params.cardId)
+    .then((card) => {
+      if (!card) {
+        res.status(ERROR_CODE_DATA_NOT_FOUND).send('Карточка с указанным _id не найдена');
+        return;
+      }
+      // eslint-disable-next-line max-len
+      Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
+        .then((newCard) => res.send(newCard))
+        .catch((err) => {
+          if (err.name === 'CastError') {
+            res.status(ERROR_CODE_INCORRECT_DATA).send({ message: `Переданы некорректные данные для постановки/снятии лайка, произошла ошибка: ${err.message}` });
+            return;
+          }
+          res.send({ message: `Произошла ошибка ${err.message}` });
+        });
+    })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(ERROR_CODE_INCORRECT_DATA).send({ message: `Переданы некорректные данные для постановки/снятии лайка, произошла ошибка: ${err.message}` });
-        return;
-      }
-      if (err.name === 'NotFound') {
-        res.status(ERROR_CODE_DATA_NOT_FOUND).send({ message: `Передан несуществующий _id карточки, произошла ошибка: ${err.message}` });
-        return;
-      }
-      res.send({ message: `Произошла ошибка ${err.message}` });
+      res.status(ERROR_CODE_DEFAULT).send({ message: `Ошибка ${err.message}` });
     });
 };
 
 module.exports.dislikeCard = (req, res) => {
-  Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
-    .orFail(new Error('NotFound'))
-    .then((card) => res.send(card))
+  Card.findById(req.params.cardId)
+    .then((card) => {
+      if (!card) {
+        res.status(ERROR_CODE_DATA_NOT_FOUND).send('Карточка с указанным _id не найдена');
+        return;
+      }
+      Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
+        .then((newCard) => res.send(newCard))
+        .catch((err) => {
+          if (err.name === 'CastError') {
+            res.status(ERROR_CODE_INCORRECT_DATA).send({ message: `Переданы некорректные данные для постановки/снятии лайка, произошла ошибка: ${err.message}` });
+            return;
+          }
+          res.send({ message: `Произошла ошибка ${err.message}` });
+        });
+    })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(ERROR_CODE_INCORRECT_DATA).send({ message: `Переданы некорректные данные для постановки/снятии лайка, произошла ошибка: ${err.message}` });
-        return;
-      }
-      if (err.name === 'NotFound') {
-        res.status(ERROR_CODE_DATA_NOT_FOUND).send({ message: `Передан несуществующий _id карточки, произошла ошибка: ${err.message}` });
-        return;
-      }
-      res.send({ message: `Произошла ошибка ${err.message}` });
+      res.status(ERROR_CODE_DEFAULT).send({ message: `Ошибка ${err.message}` });
     });
 };
