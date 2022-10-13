@@ -55,11 +55,7 @@ module.exports.likeCard = (req, res) => {
       Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
         .then((newCard) => res.send(newCard))
         .catch((err) => {
-          if (err.name === 'CastError') {
-            res.status(ERROR_CODE_INCORRECT_DATA).send({ message: `Переданы некорректные данные для постановки/снятии лайка, произошла ошибка: ${err.message}` });
-            return;
-          }
-          res.send({ message: `Произошла ошибка ${err.message}` });
+          res.status(ERROR_CODE_DEFAULT).send({ message: `Произошла ошибка ${err.message}` });
         });
     })
     .catch((err) => {
@@ -81,11 +77,7 @@ module.exports.dislikeCard = (req, res) => {
       Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
         .then((newCard) => res.send(newCard))
         .catch((err) => {
-          if (err.name === 'CastError') {
-            res.status(ERROR_CODE_INCORRECT_DATA).send({ message: `Переданы некорректные данные для постановки/снятии лайка, произошла ошибка: ${err.message}` });
-            return;
-          }
-          res.send({ message: `Произошла ошибка ${err.message}` });
+          res.status(ERROR_CODE_DEFAULT).send({ message: `Произошла ошибка ${err.message}` });
         });
     })
     .catch((err) => {
