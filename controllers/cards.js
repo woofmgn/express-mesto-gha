@@ -63,6 +63,10 @@ module.exports.likeCard = (req, res) => {
         });
     })
     .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(ERROR_CODE_INCORRECT_DATA).send({ message: `Переданы некорректные данные для постановки/снятии лайка, произошла ошибка: ${err.message}` });
+        return;
+      }
       res.status(ERROR_CODE_DEFAULT).send({ message: `Ошибка ${err.message}` });
     });
 };
@@ -85,6 +89,10 @@ module.exports.dislikeCard = (req, res) => {
         });
     })
     .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(ERROR_CODE_INCORRECT_DATA).send({ message: `Переданы некорректные данные для постановки/снятии лайка, произошла ошибка: ${err.message}` });
+        return;
+      }
       res.status(ERROR_CODE_DEFAULT).send({ message: `Ошибка ${err.message}` });
     });
 };
