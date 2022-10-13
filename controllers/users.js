@@ -39,12 +39,12 @@ module.exports.createUser = (req, res) => {
         res.status(ERROR_CODE_INCORRECT_DATA).send({ message: `Переданы некорректные данные при создании пользователя, произошла ошибка: ${err.message}` });
         return;
       }
-      res.status(500).send({ message: err.message });
+      res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
     });
 };
 
 module.exports.editUser = (req, res) => {
-  User.findByIdAndUpdate(req.user._id, req.body, { new: true })
+  User.findByIdAndUpdate(req.user._id, req.body, { new: true, runValidators: true })
     .orFail(new Error('NotFound'))
     .then((user) => res.send(user))
     .catch((err) => {
@@ -56,6 +56,6 @@ module.exports.editUser = (req, res) => {
         res.status(ERROR_CODE_INCORRECT_DATA).send({ message: `Переданы некорректные данные при обновлении профиля, произошла ошибка: ${err.message}` });
         return;
       }
-      res.send(`Произошла ошибка: ${err.message}`);
+      res.status(ERROR_CODE_DEFAULT).send({ message: err.message });
     });
 };
