@@ -35,7 +35,7 @@ module.exports.createUser = (req, res) => {
   User.create({ name, about, avatar })
     .then((user) => res.send(user))
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'ValidationError') {
         res.status(ERROR_CODE_INCORRECT_DATA).send({ message: `Переданы некорректные данные при создании пользователя, произошла ошибка: ${err.message}` });
         return;
       }
@@ -52,7 +52,7 @@ module.exports.editUser = (req, res) => {
         res.status(ERROR_CODE_DATA_NOT_FOUND).send({ message: `Пользователь с указанным _id не найден, произошла ошибка: ${err.message}` });
         return;
       }
-      if (err.name === 'CastError') {
+      if (err.name === 'ValidationError') {
         res.status(ERROR_CODE_INCORRECT_DATA).send({ message: `Переданы некорректные данные при обновлении профиля, произошла ошибка: ${err.message}` });
         return;
       }
