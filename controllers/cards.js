@@ -55,8 +55,11 @@ module.exports.likeCard = (req, res) => {
         res.status(ERROR_CODE_DATA_NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена' });
         return;
       }
-      // eslint-disable-next-line max-len
-      Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
+      Card.findByIdAndUpdate(
+        req.params.cardId,
+        { $addToSet: { likes: req.user._id } },
+        { new: true },
+      )
         .then((newCard) => res.send(newCard))
         .catch(() => {
           res.status(ERROR_CODE_DEFAULT).send({ message: 'Произошла ошибка' });
