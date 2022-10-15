@@ -49,13 +49,9 @@ module.exports.deleteCard = (req, res) => {
 };
 
 module.exports.likeCard = (req, res) => {
-  Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $addToSet: { likes: req.user._id } },
-    { new: true },
-  )
-    .then((newCard) => {
-      if (!newCard) {
+  Card.findById(req.params.cardId)
+    .then((card) => {
+      if (!card) {
         res.status(ERROR_CODE_DATA_NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена' });
         return;
       }
@@ -79,20 +75,17 @@ module.exports.likeCard = (req, res) => {
 };
 
 module.exports.dislikeCard = (req, res) => {
-  Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $pull: { likes: req.user._id } },
-    { new: true },
-  )
-    .then((newCard) => {
-      if (!newCard) {
+  Card.findById(req.params.cardId)
+    .then((card) => {
+      if (!card) {
         res.status(ERROR_CODE_DATA_NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена' });
         return;
       }
-      res.send(newCard);
-    })
-    .catch(() => {
-      res.status(ERROR_CODE_DEFAULT).send({ message: 'Произошла ошибка' });
+      Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
+        .then((newCard) => res.send(newCard))
+        .catch(() => {
+          res.status(ERROR_CODE_DEFAULT).send({ message: 'Произошла ошибка' });
+        });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
