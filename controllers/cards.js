@@ -48,29 +48,6 @@ module.exports.deleteCard = (req, res) => {
     });
 };
 
-// module.exports.likeCard = (req, res) => {
-//   Card.findById(req.params.cardId)
-//     .then((card) => {
-//       if (!card) {
-//         res.status(ERROR_CODE_DATA_NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена' });
-//         return;
-//       }
-//       // eslint-disable-next-line max-len
-//       Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
-//         .then((newCard) => res.send(newCard))
-//         .catch(() => {
-//           res.status(ERROR_CODE_DEFAULT).send({ message: 'Произошла ошибка' });
-//         });
-//     })
-//     .catch((err) => {
-//       if (err.name === 'CastError') {
-//         res.status(ERROR_CODE_INCORRECT_DATA).send({ message: 'Переданы некорректные данные для постановки/снятии лайка, произошла ошибка' });
-//         return;
-//       }
-//       res.status(ERROR_CODE_DEFAULT).send({ message: 'Произошла ошибка' });
-//     });
-// };
-
 module.exports.likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
@@ -120,25 +97,3 @@ module.exports.dislikeCard = (req, res) => {
       res.status(ERROR_CODE_DEFAULT).send({ message: 'Произошла ошибка' });
     });
 };
-
-// module.exports.dislikeCard = (req, res) => {
-//   Card.findById(req.params.cardId)
-//     .then((card) => {
-//       if (!card) {
-//         res.status(ERROR_CODE_DATA_NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена' });
-//         return;
-//       }
-//       Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
-//         .then((newCard) => res.send(newCard))
-//         .catch(() => {
-//           res.status(ERROR_CODE_DEFAULT).send({ message: 'Произошла ошибка' });
-//         });
-//     })
-//     .catch((err) => {
-//       if (err.name === 'CastError') {
-//         res.status(ERROR_CODE_INCORRECT_DATA).send({ message: 'Переданы некорректные данные для постановки/снятии лайка, произошла ошибка' });
-//         return;
-//       }
-//       res.status(ERROR_CODE_DEFAULT).send({ message: 'Произошла ошибка' });
-//     });
-// };
