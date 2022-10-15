@@ -45,7 +45,9 @@ module.exports.createUser = (req, res) => {
 };
 
 module.exports.editUser = (req, res) => {
-  User.findByIdAndUpdate(req.user._id, req.body, { new: true, runValidators: true })
+  const { name, about } = req.body;
+
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .orFail(new Error('NotFound'))
     .then((user) => res.send(user))
     .catch((err) => {
@@ -62,7 +64,9 @@ module.exports.editUser = (req, res) => {
 };
 
 module.exports.editAvatar = (req, res) => {
-  User.findByIdAndUpdate(req.user._id, req.body, { new: true, runValidators: true })
+  const { avatar } = req.body;
+
+  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .orFail(new Error('NotFound'))
     .then((userAvatar) => res.send(userAvatar))
     .catch((err) => {
