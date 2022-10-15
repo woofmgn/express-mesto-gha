@@ -59,10 +59,15 @@ module.exports.likeCard = (req, res) => {
         res.status(ERROR_CODE_DATA_NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена' });
         return;
       }
-      res.send(newCard);
-    })
-    .catch(() => {
-      res.status(ERROR_CODE_DEFAULT).send({ message: 'Произошла ошибка' });
+      Card.findByIdAndUpdate(
+        req.params.cardId,
+        { $addToSet: { likes: req.user._id } },
+        { new: true },
+      )
+        .then((newCard) => res.send(newCard))
+        .catch(() => {
+          res.status(ERROR_CODE_DEFAULT).send({ message: 'Произошла ошибка' });
+        });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
