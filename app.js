@@ -6,6 +6,7 @@ const helmet = require('helmet');
 
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
+const { login, createUser } = require('./controllers/users');
 
 const { ERROR_CODE_DATA_NOT_FOUND } = require('./utills/utills');
 
@@ -36,6 +37,8 @@ app.use(helmet());
 
 app.use(userRouter);
 app.use(cardRouter);
+app.post('/signin', login);
+app.post('/signup', createUser);
 app.use('*', (req, res) => {
   res.status(ERROR_CODE_DATA_NOT_FOUND).send({ message: 'Страница не найдена' });
 });

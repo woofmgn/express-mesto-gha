@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 
@@ -36,37 +37,6 @@ module.exports.getUser = (req, res) => {
     });
 };
 
-// module.exports.createUser = (req, res) => {
-//   const {
-//     name,
-//     about,
-//     avatar,
-//     email,
-//     password,
-//   } = req.body;
-
-//   bcrypt.hash(req.body.password, 10);
-
-//   User.create({
-//     name,
-//     about,
-//     avatar,
-//     email,
-//     password,
-//   })
-//     .then((user) => res.send(user))
-//     .catch((err) => {
-//       if (err.name === 'ValidationError') {
-//         res.status(ERROR_CODE_INCORRECT_DATA).send({
-//           message:
-//             'Переданы некорректные данные при создании пользователя, произошла ошибка',
-//         });
-//         return;
-//       }
-//       res.status(ERROR_CODE_DEFAULT).send({ message: 'Произошла ошибка' });
-//     });
-// };
-
 module.exports.createUser = (req, res) => {
   const {
     name, about, avatar, email,
@@ -82,13 +52,24 @@ module.exports.createUser = (req, res) => {
           if (err.name === 'ValidationError') {
             res.status(ERROR_CODE_INCORRECT_DATA).send({
               message:
-                'Переданы некорректные данные при создании пользователя, произошла ошибка',
+                `Переданы некорректные данные при создании пользователя, произошла ошибка: ${err.message}`,
             });
             return;
           }
           res.status(ERROR_CODE_DEFAULT).send({ message: 'Произошла ошибка' });
         });
     });
+};
+
+module.exports.login = (req, res) => {
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, 'Yandex-the-best', { expiresIn: '7d' });
+      res.send({ token });
+    })
+    .catch((err) => res.status(ERROR_CODE_DATA_NOT_FOUND).send({ message: err.message }));
 };
 
 module.exports.editUser = (req, res) => {
