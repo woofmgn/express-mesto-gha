@@ -17,14 +17,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use(bodyParser.json());
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '63415e20e6ce48991e929c1e',
-  };
-
-  next();
-});
-
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,

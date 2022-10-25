@@ -15,7 +15,7 @@ module.exports.getUsers = (req, res) => {
     .catch(() => res.status(ERROR_CODE_DEFAULT).send({ message: 'Произошла ошибка' }));
 };
 
-module.exports.getUser = (req, res) => {
+module.exports.getUser = (req, res, next) => {
   User.findById(req.params.id)
     .then((user) => {
       if (!user) {
@@ -25,6 +25,7 @@ module.exports.getUser = (req, res) => {
         return;
       }
       res.send(user);
+      next();
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -35,6 +36,14 @@ module.exports.getUser = (req, res) => {
       }
       res.status(ERROR_CODE_DEFAULT).send({ message: 'Произошла ошибка' });
     });
+};
+
+module.exports.getMeUser = (req, res) => {
+  User.findOne({ _id: req.user._id })
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => ({ message: `!! ${err.message}` }));
 };
 
 module.exports.createUser = (req, res) => {
