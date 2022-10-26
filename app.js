@@ -27,12 +27,14 @@ const limiter = rateLimit({
 app.use(limiter);
 app.use(helmet());
 
-app.use(userRouter);
-app.use(cardRouter);
 app.post('/signin', login);
 app.post('/signup', createUser);
+app.use(userRouter);
+app.use(cardRouter);
 app.use('*', (req, res) => {
-  res.status(ERROR_CODE_DATA_NOT_FOUND).send({ message: 'Страница не найдена' });
+  res
+    .status(ERROR_CODE_DATA_NOT_FOUND)
+    .send({ message: 'Страница не найдена' });
 });
 
 app.listen(PORT, () => {
