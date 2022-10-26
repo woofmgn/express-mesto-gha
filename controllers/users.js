@@ -4,6 +4,7 @@ const NotFoundError = require('../errors/notFoundError');
 const IncorrectDataError = require('../errors/incorrectDataError');
 
 const User = require('../models/user');
+const EmailNotUniqueError = require('../errors/emailNotUniqeError');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
@@ -49,9 +50,13 @@ module.exports.createUser = (req, res, next) => {
         .then((user) => res.send(user))
         .catch((err) => {
           if (err.name === 'ValidationError') {
-            next(new IncorrectDataError('Переданы некорректные данные при создании пользователя, произошла ошибка'));
+            next(new IncorrectDataError(`Переданы некорректные данные при создании пользователя, произошла ошибка: ${err.message}`));
           }
-          next(err);
+          if (err.name === 11000) {
+            next(new EmailNotUniqueError('Такой пользователь уже существует, введите другой email'));
+          } else {
+            next(err);
+          }
         });
     });
 };
@@ -82,7 +87,7 @@ module.exports.editUser = (req, res, next) => {
         next(new NotFoundError('Пользователь с указанным _id не найден, произошла ошибка'));
       }
       if (err.name === 'ValidationError') {
-        next(new IncorrectDataError('Переданы некорректные данные при обновлении профиля, произошла ошибка'));
+        next(new IncorrectDataError(`Переданы некорректные данные при обновлении профиля, произошла ошибка: ${err.message}`));
       }
       next(err);
     });
@@ -103,7 +108,7 @@ module.exports.editAvatar = (req, res, next) => {
         next(new NotFoundError('Пользователь с указанным _id не найден, произошла ошибка'));
       }
       if (err.name === 'ValidationError') {
-        next(new IncorrectDataError('Переданы некорректные данные при обновлении профиля, произошла ошибка'));
+        next(new IncorrectDataError(`Переданы некорректные данные при обновлении профиля, произошла ошибка: ${err.message}`));
       }
       next(err);
     });
