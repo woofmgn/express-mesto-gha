@@ -7,8 +7,10 @@ const helmet = require('helmet');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
+const handlerError = require('./middlewares/handlerError');
 
-const { ERROR_CODE_DATA_NOT_FOUND } = require('./utills/utills');
+// const { ERROR_CODE_DATA_NOT_FOUND } = require('./utills/utills');
+const NotFoundError = require('./errors/notFoundError');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -31,12 +33,11 @@ app.post('/signin', login);
 app.post('/signup', createUser);
 app.use(userRouter);
 app.use(cardRouter);
-app.use('*', (req, res) => {
-  res
-    .status(ERROR_CODE_DATA_NOT_FOUND)
-    .send({ message: 'Страница не найдена' });
+app.use('*', () => {
+  throw new NotFoundError('Запрашиваемая страница не найдена');
 });
 
+app.use(handlerError);
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`listen a ${PORT}`);
