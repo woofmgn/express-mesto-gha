@@ -50,7 +50,7 @@ module.exports.createUser = (req, res, next) => {
           name: user.name, about: user.about, avatar: user.avatar, email: user.email,
         }))
         .catch((err) => {
-          if (err.name === 11000) {
+          if (err.code === 11000) {
             next(new EmailNotUniqueError('Такой пользователь уже существует, введите другой email'));
           }
           if (err.name === 'ValidationError') {
