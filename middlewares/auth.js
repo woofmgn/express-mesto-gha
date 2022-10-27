@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { IncorrectTokenError } = require('../errors/incorrectTokenError');
+const IncorrectTokenError = require('../errors/incorrectTokenError');
 
 // eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
