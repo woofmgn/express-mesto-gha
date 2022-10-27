@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { REGEX_URL } = require('../utills/utills');
 
 const cardSchema = mongoose.Schema({
   name: {
@@ -26,5 +27,7 @@ const cardSchema = mongoose.Schema({
     default: Date.now(),
   },
 });
+
+cardSchema.path('link').validate((val) => REGEX_URL.test(val), 'Invalid URL.');
 
 module.exports = mongoose.model('card', cardSchema);
