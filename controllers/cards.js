@@ -2,12 +2,6 @@ const IncorrectDataError = require('../errors/incorrectDataError');
 const NotFoundError = require('../errors/notFoundError');
 const Card = require('../models/card');
 
-// const {
-//   ERROR_CODE_INCORRECT_DATA,
-//   ERROR_CODE_DATA_NOT_FOUND,
-//   ERROR_CODE_DEFAULT,
-// } = require('../utills/utills');
-
 module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.send(cards))

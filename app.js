@@ -4,12 +4,13 @@ const bodyParser = require('body-parser');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 
+const { errors } = require('celebrate');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
 const handlerError = require('./middlewares/handlerError');
+const { validationCreateUser, validationLoginUser } = require('./middlewares/validationJoiUser');
 
-// const { ERROR_CODE_DATA_NOT_FOUND } = require('./utills/utills');
 const NotFoundError = require('./errors/notFoundError');
 
 const { PORT = 3000 } = process.env;
@@ -29,14 +30,15 @@ const limiter = rateLimit({
 app.use(limiter);
 app.use(helmet());
 
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signin', validationLoginUser, login);
+app.post('/signup', validationCreateUser, createUser);
 app.use(userRouter);
 app.use(cardRouter);
 app.use('*', () => {
   throw new NotFoundError('Запрашиваемая страница не найдена');
 });
 
+app.use(errors());
 app.use(handlerError);
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console

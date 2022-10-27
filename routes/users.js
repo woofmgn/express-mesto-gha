@@ -3,12 +3,13 @@ const auth = require('../middlewares/auth');
 const {
   getUsers, getUser, editUser, editAvatar, getMeUser,
 } = require('../controllers/users');
+const { validationUserEdit, validationEditAvatar } = require('../middlewares/validationJoiUser');
 
 userRouter.use(auth);
-userRouter.get('/users', auth, getUsers);
-userRouter.get('/users/me', auth, getMeUser);
-userRouter.get('/users/:id', auth, getUser);
-userRouter.patch('/users/me', auth, editUser);
-userRouter.patch('/users/me/avatar', auth, editAvatar);
+userRouter.get('/users', getUsers);
+userRouter.get('/users/me', getMeUser);
+userRouter.get('/users/:id', getUser);
+userRouter.patch('/users/me', validationUserEdit, editUser);
+userRouter.patch('/users/me/avatar', validationEditAvatar, editAvatar);
 
 module.exports = userRouter;
