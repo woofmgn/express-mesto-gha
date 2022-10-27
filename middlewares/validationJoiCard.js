@@ -7,3 +7,9 @@ module.exports.validationCreateCard = celebrate({
     link: Joi.string().pattern(REGEX_URL),
   }),
 });
+
+module.exports.validationCardId = celebrate({
+  body: Joi.object().keys({
+    _id: Joi.string().required().length(24),
+  }),
+});
