@@ -23,9 +23,8 @@ module.exports.getUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new IncorrectDataError('Передан не верный id пользователя, произошла ошибка'));
-      } else {
-        next(err);
       }
+      next(err);
     });
 };
 
@@ -47,16 +46,17 @@ module.exports.createUser = (req, res, next) => {
       User.create({
         name, about, avatar, email, password: hash,
       })
-        .then((user) => res.send(user))
+        .then((user) => res.send({
+          name: user.name, about: user.about, avatar: user.avatar, email: user.email,
+        }))
         .catch((err) => {
+          if (err.name === 11000) {
+            next(new EmailNotUniqueError('Такой пользователь уже существует, введите другой email'));
+          }
           if (err.name === 'ValidationError') {
             next(new IncorrectDataError(`Переданы некорректные данные при создании пользователя, произошла ошибка: ${err.message}`));
           }
-          if (err.name === 11000) {
-            next(new EmailNotUniqueError('Такой пользователь уже существует, введите другой email'));
-          } else {
-            next(err);
-          }
+          next(err);
         });
     });
 };
