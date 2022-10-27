@@ -9,7 +9,7 @@ module.exports.validationCreateCard = celebrate({
 });
 
 module.exports.validationCardId = celebrate({
-  body: Joi.object().keys({
-    _id: Joi.string().required().length(24),
+  params: Joi.object().keys({
+    cardId: Joi.string().required().hex().length(24),
   }),
 });

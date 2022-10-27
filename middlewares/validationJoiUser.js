@@ -30,3 +30,9 @@ module.exports.validationEditAvatar = celebrate({
     avatar: Joi.string().pattern(REGEX_URL),
   }),
 });
+
+module.exports.validationUserId = celebrate({
+  params: Joi.object().keys({
+    id: Joi.string().required().hex().length(24),
+  }),
+});
