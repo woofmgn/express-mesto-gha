@@ -1,5 +1,6 @@
 const IncorrectDataError = require('../errors/incorrectDataError');
 const NotFoundError = require('../errors/notFoundError');
+const ForbiddenError = require('../errors/forbiddenError');
 const Card = require('../models/card');
 
 module.exports.getCards = (req, res, next) => {
@@ -28,7 +29,7 @@ module.exports.deleteCard = (req, res, next) => {
         throw new NotFoundError('Карточка с указанным _id не найдена');
       }
       if (card.owner.toString() !== req.user._id) {
-        throw new IncorrectDataError('Нельзя удалить чужую карточку');
+        throw new ForbiddenError('Нельзя удалить чужую карточку');
       }
       Card.findByIdAndRemove(req.params.cardId)
         .then(() => res.send({ message: `Карточка ${req.params.cardId} удалена` }))
