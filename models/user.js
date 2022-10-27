@@ -3,7 +3,6 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const IncorrectDataError = require('../errors/incorrectDataError');
 const IncorrectTokenError = require('../errors/incorrectTokenError');
-const { REGEX_URL } = require('../utills/utills');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -20,8 +19,18 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    default:
-      'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+    validate: {
+      validator: (value) => validator.isURL(
+        value,
+        {
+          protocols: ['http', 'https'],
+          require_tld: true,
+          require_protocol: true,
+        },
+      ),
+      message: 'Некорректный URL',
+    },
   },
   email: {
     type: String,
@@ -38,8 +47,6 @@ const userSchema = new mongoose.Schema({
     select: false,
   },
 });
-
-userSchema.path('avatar').validate((val) => REGEX_URL.test(val), 'Invalid URL.');
 
 // eslint-disable-next-line func-names
 userSchema.statics.findUserByCredentials = function (email, password) {
